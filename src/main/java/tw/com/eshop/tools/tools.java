@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.Instant;
 import tw.com.eshop.dbutil.dbutils;
@@ -13,7 +12,6 @@ public class tools {
 
 	Connection conn = null;
 	PreparedStatement ps = null;
-	Statement st = null;
 	ResultSet rs = null;
 
 	public static tools gettools() {
@@ -27,10 +25,11 @@ public class tools {
 
 		try {
 			conn = dbutils.getdb().getConnection();
-			String loginchecksql = "select * from admin_member where admin_account='" + adminloginaccountinput
-					+ "' and admin_password='" + adminloginpasswordinput + "';";
-			st = conn.createStatement();
-			rs = st.executeQuery(loginchecksql);
+			String loginchecksql = "select * from admin_member where admin_account = ? and admin_password = ? ;";
+			ps=conn.prepareStatement(loginchecksql);
+			ps.setString(1, adminloginaccountinput);
+			ps.setString(2, adminloginpasswordinput);
+			rs = ps.executeQuery();
 			if (rs.next()) {
 				status=rs.getInt("admin_active");
 				return status;
@@ -40,7 +39,7 @@ public class tools {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			dbutils.getdb().Close(st);
+			dbutils.getdb().Close(ps);
 			dbutils.getdb().Close(conn);
 		}
 		return status;
@@ -53,17 +52,18 @@ public class tools {
 		String admin_name = "admin_name";
 		try {
 			conn = dbutils.getdb().getConnection();
-			String loginchecksql = "select admin_name from admin_member where admin_account='" + adminloginaccountinput
-					+ "' and admin_password='" + adminloginpasswordinput + "';";
-			st = conn.createStatement();
-			rs = st.executeQuery(loginchecksql);
+			String loginchecksql = "select * from admin_member where admin_account = ? and admin_password = ? ;";
+			ps=conn.prepareStatement(loginchecksql);
+			ps.setString(1, adminloginaccountinput);
+			ps.setString(2, adminloginpasswordinput);
+			rs = ps.executeQuery();
 			if (rs.next()) {
 				adminname = rs.getString(admin_name);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			dbutils.getdb().Close(st);
+			dbutils.getdb().Close(ps);
 			dbutils.getdb().Close(conn);
 		}
 
@@ -76,17 +76,18 @@ public class tools {
 
 		try {
 			conn = dbutils.getdb().getConnection();
-			String loginchecksql = "select * from customer_member where cust_account='" + customerloginaccountinput
-					+ "' and cust_password='" + customerloginpasswordinput + "';";
-			st = conn.createStatement();
-			rs = st.executeQuery(loginchecksql);
+			String loginchecksql = "select * from customer_member where cust_account = ? and cust_password = ? ;";
+			ps=conn.prepareStatement(loginchecksql);
+			ps.setString(1, customerloginaccountinput);
+			ps.setString(2, customerloginpasswordinput);
+			rs = ps.executeQuery();
 			if (rs.next()) {
 				status = true;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			dbutils.getdb().Close(st);
+			dbutils.getdb().Close(ps);
 			dbutils.getdb().Close(conn);
 		}
 		return status;
@@ -100,17 +101,18 @@ public class tools {
 
 		try {
 			conn = dbutils.getdb().getConnection();
-			String loginchecksql = "select cust_name from customer_member where cust_account='" + customerloginaccountinput
-					+ "' and cust_password='" + customerloginpasswordinput + "';";
-			st = conn.createStatement();
-			rs = st.executeQuery(loginchecksql);
+			String loginchecksql = "select * from customer_member where cust_account = ? and cust_password = ? ;";
+			ps=conn.prepareStatement(loginchecksql);
+			ps.setString(1, customerloginaccountinput);
+			ps.setString(2, customerloginpasswordinput);
+			rs = ps.executeQuery();
 			if (rs.next()) {
 				customername = rs.getString(cust_name);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			dbutils.getdb().Close(st);
+			dbutils.getdb().Close(ps);
 			dbutils.getdb().Close(conn);
 		}
 		return customername;
